@@ -2,7 +2,7 @@
 // HOOks
 import React from 'react'
 // State Management
-import { useTasksStore } from '@/store/TasksStore'
+import { Task, useTasksStore } from '@/store/TasksStore'
 import { useDialogInfoStore } from '@/store/ShowDialogStore';
 import { useThemeStore } from '@/store/Theme';
 import { useShowAlertStore, useTitleAlertStore } from '@/store/Alert';
@@ -16,9 +16,10 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 
 type EditStateType = {
   setEditID: (id: string) => void
+  filteredTasks: Task[];
 }
-export default function TasksCall({ setEditID }: EditStateType) {
-  const { tasks, checkTask, removeTask } = useTasksStore();
+export default function TasksCall({ setEditID, filteredTasks }: EditStateType) {
+  const { checkTask, removeTask } = useTasksStore();
   const { setOpenEditDialog } = useDialogInfoStore()
   const { theme } = useThemeStore();
   const { showAlert } = useShowAlertStore();
@@ -33,10 +34,10 @@ export default function TasksCall({ setEditID }: EditStateType) {
   }
 
   return (
-    <div className='container mt-10 mb-10 overflow-y-auto text-center md:w-2/3 max-h-[400px]'>
+    <div className='container mb-10 overflow-y-auto text-center md:w-2/3 max-h-[400px]'>
       <div className={`${theme === 'dark' ? 'bg-[#f3f4f6]' : 'bg-gray-100/30'} flex flex-col justify-center items-start rounded-md h-full shadow-lg`}>
         {
-          tasks.length > 0 && (
+          filteredTasks.length > 0 && (
             <div className='bg-primary flex justify-between items-center w-full rounded-t-lg px-6 text-xl text-white py-3'>
               <h1>Tasks</h1>
               <h1>Actions</h1>
@@ -44,7 +45,7 @@ export default function TasksCall({ setEditID }: EditStateType) {
           )
         }
         {
-          tasks.map((task) => {
+          filteredTasks.map((task) => {
             return (
               <div key={task?.taskID} className={`${theme === 'dark' ? 'border-gray-200' : 'border-gray-100'} ${task?.completed ? 'bg-gray-300' : ''} bg-gray-100 gap-2 px-6 py-3 text-left w-full border-b last:border-b-0 flex justify-between items-start`}>
                 <div className='w-3/4'>

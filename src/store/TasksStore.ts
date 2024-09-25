@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import uuid4 from "uuid4";
 
-type Task = {
+export type Task = {
   taskID: string
   taskName: string
   taskDescription?: string
@@ -15,12 +15,13 @@ type TaskState = {
   checkTask: (taskID: string) => void
   removeTask: (taskID: string) => void
   editTask: (taskID: string, taskName: string, taskDescription: string) => void
-  setTasks: (tasks: Task[]) => void;
+  completedTasks: () => Task[]
+  uncompletedTasks: () => Task[]
 }
 
 export const useTasksStore = create<TaskState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       tasks: [],
       addTask: (taskName, taskDescription) => {
         set((state) => {
@@ -49,7 +50,15 @@ export const useTasksStore = create<TaskState>()(
           return { tasks: updateTask }
         });
       },
-      setTasks: (tasks) => set({ tasks }),
+      completedTasks: () => {
+        console.log(get().tasks.filter((task) => task.completed));
+        return get().tasks.filter((task) => task.completed);
+      },
+      uncompletedTasks: () => {
+        console.log(get().tasks.filter((task) => !task.completed));
+        return get().tasks.filter((task) => !task.completed);
+      },
+
     }),
     {
       name: 'tasks-storage',
