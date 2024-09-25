@@ -1,13 +1,17 @@
 'use client'
 import { Task, useTasksStore } from '@/store/TasksStore'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 type TaskClassificationType = {
   setFilteredTasks: (tasks: Task[]) => void
 }
 export default function TaskClassification({ setFilteredTasks }: TaskClassificationType) {
   const { tasks, completedTasks, uncompletedTasks } = useTasksStore();
-
+  
+  useEffect(() => {
+    setFilteredTasks(tasks);
+  }, [tasks])
+  
   const showAllTasks = () => {
     setFilteredTasks(tasks);
   }

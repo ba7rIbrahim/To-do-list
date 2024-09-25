@@ -2,7 +2,6 @@
 import React from 'react'
 import { useShowAlertStore, useTitleAlertStore } from '@/store/Alert'
 
-
 export default function Alert() {
   const { alert } = useShowAlertStore();
   const { title } = useTitleAlertStore();

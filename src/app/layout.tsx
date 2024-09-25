@@ -21,8 +21,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { theme } = useThemeStore();
-  // console.log(theme);
-
   return (
     <html lang="en" data-theme={theme}>
       <body

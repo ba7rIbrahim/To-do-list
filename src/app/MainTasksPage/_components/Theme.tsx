@@ -3,8 +3,8 @@ import React from 'react'
 import { useThemeStore } from '@/store/Theme'
 
 export default function Theme() {
-  const { theme, changeTheme } = useThemeStore();
-  
+  const { changeTheme } = useThemeStore();
+
   return (
     <div className='w-[35px] h-[35px] rounded-full flex justify-center hover:bg-hover'>
       <label className="swap swap-rotate">
@@ -15,7 +15,6 @@ export default function Theme() {
         <svg
           onClick={() => {
             changeTheme('dark')
-            console.log("Theme => ", theme)
           }}
           className="swap-on h-6 w-6 fill-current"
           xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +27,6 @@ export default function Theme() {
         <svg
           onClick={() => {
             changeTheme('light')
-            console.log("Theme => ", theme)
           }}
           className="swap-off h-6 w-6 fill-current"
           xmlns="http://www.w3.org/2000/svg"

@@ -5,7 +5,7 @@ import { useDialogInfoStore } from '@/store/ShowDialogStore';
 import AddNewTask from './AddNewTask';
 import EditTask from './EditTask';
 
-type AddTaskType =  {
+type AddTaskType = {
   editID: string
 }
 export default function TasksActions({ editID }: AddTaskType) {
@@ -21,8 +21,8 @@ export default function TasksActions({ editID }: AddTaskType) {
           <Plus className="w-5 h-5" />
           <span>Add New Task</span>
         </button>
-      <AddNewTask />
-      <EditTask editID={editID}/>
+        <AddNewTask />
+        <EditTask editID={editID} />
 
       </div>
     </div>

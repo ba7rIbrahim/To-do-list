@@ -51,11 +51,9 @@ export const useTasksStore = create<TaskState>()(
         });
       },
       completedTasks: () => {
-        console.log(get().tasks.filter((task) => task.completed));
         return get().tasks.filter((task) => task.completed);
       },
       uncompletedTasks: () => {
-        console.log(get().tasks.filter((task) => !task.completed));
         return get().tasks.filter((task) => !task.completed);
       },
 
