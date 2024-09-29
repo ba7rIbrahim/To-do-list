@@ -4,24 +4,21 @@ import React from 'react'
 // State Management
 import { Task, useTasksStore } from '@/store/TasksStore'
 import { useDialogInfoStore } from '@/store/ShowDialogStore';
-import { useThemeStore } from '@/store/Theme';
 import { useShowAlertStore, useTitleAlertStore } from '@/store/Alert';
 // Icons
-import { FaPenToSquare } from "react-icons/fa6"
-import { FaRegCircleCheck } from "react-icons/fa6";
-import { FaCircleCheck } from "react-icons/fa6";
-import { FaRegTrashAlt } from 'react-icons/fa';
-// import DeletedModal from './DeletedModal';
-
+import { BsThreeDotsVertical } from "react-icons/bs";
+// COMPONENTS
+import TasksActions from './TasksActions';
+import DeleteDialog from './DeleteDialog';
 
 type EditStateType = {
+  editID: string
   setEditID: (id: string) => void
   filteredTasks: Task[];
 }
-export default function TasksCall({ setEditID, filteredTasks }: EditStateType) {
-  const { checkTask, removeTask } = useTasksStore();
+export default function TasksCall({ editID, setEditID, filteredTasks }: EditStateType) {
+  const { checkTask } = useTasksStore();
   const { setOpenEditDialog } = useDialogInfoStore()
-  const { theme } = useThemeStore();
   const { showAlert } = useShowAlertStore();
   const { alertTitle } = useTitleAlertStore();
 
@@ -33,80 +30,70 @@ export default function TasksCall({ setEditID, filteredTasks }: EditStateType) {
     showAlert(false);
   }
 
+  const handleShowTask = () => {
+    console.log('handle show task')
+  }
+
   return (
-    <div className='container mb-10 overflow-y-auto text-center md:w-2/3 max-h-[400px]'>
-      <div className={`${theme === 'dark' ? 'bg-[#f3f4f6]' : 'bg-gray-100/30'} flex flex-col justify-center items-start rounded-md h-full shadow-lg`}>
-        {
-          filteredTasks?.length > 0 && (
-            <div className='bg-primary flex justify-between items-center w-full rounded-t-lg px-6 text-xl text-white py-3'>
-              <h1>Tasks</h1>
-              <h1>Actions</h1>
-            </div>
-          )
-        }
-        {
-          filteredTasks?.map((task) => {
-            return (
-              <div key={task?.taskID} className={`${theme === 'dark' ? 'border-gray-200' : 'border-gray-100'} ${task?.completed ? 'bg-gray-300' : ''} bg-gray-100 gap-2 px-6 py-3 text-left w-full border-b last:border-b-0 flex justify-between items-start`}>
-                <div className='w-3/4'>
-                  <h1 className={`${task?.completed ? 'line-through' : ''} font-semibold text-lg text-primary`}>{task?.taskName}</h1>
-                  <p className={`${task?.completed ? 'line-through' : ''} text-sm text-gray-500 w-2/3`}>{task?.taskDescription}</p>
-                </div>
-                <div className='flex gap-3 w-1/4 justify-end'>
-                  <div className={`tooltip flex items-center justify-center`} data-tip="completed">
-                    <button
-                      onClick={() => {
+    <div className='grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 w-full md:w-auto'>
+      <TasksActions editID={editID} />
+      {
+        filteredTasks?.map((task) => {
+          return (
+            <div key={task.taskID} onClick={handleShowTask} className={`${task?.completed ? 'bg-gray-300' : 'bg-gray-100'} card shadow min-h-[116px]`}>
+              <div className="card-body p-3 w-full h-full">
+                <label htmlFor={`DialogInfo_${task?.taskID}`} className='flex-1 h-full cursor-pointer'>
+                  <h2 className={`${task?.completed ? 'line-through' : ''} card-title truncate`}>{task.taskName}</h2>
+                  <p className={`${task?.completed ? 'line-through' : ''} truncate`}>{task.taskDescription}</p>
+                </label>
+                <div className="card-actions justify-end ">
+                  <div className="dropdown dropdown-end text-right">
+                    <div tabIndex={0} role="button" className="font-bold text-xl text-slate-600 rounded-full focus:bg-slate-200 hover:scale-110 px-1 py-0 flex items-center justify-center w-6 h-6"><BsThreeDotsVertical /></div>
+                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-24 p-2 shadow">
+                      <li><button onClick={() => {
                         checkTask(task?.taskID)
                         showAlertBtn('Mission accomplished')
-                      }}
-                    >{task?.completed ? <FaCircleCheck className='text-green-500 w-[20px] h-[30px]' /> : <FaRegCircleCheck className='text-green-500 w-[20px] h-[30px]' />}
-                    </button>
-                  </div>
-                  <div className="tooltip h-[30px]" data-tip="edit">
-                    <button
-                      onClick={() => {
+                      }}>{task?.completed ? 'UnFinish' : 'Finish'}</button></li>
+                      <li><button onClick={() => {
                         setOpenEditDialog(true)
-                        setEditID(task.taskID)
-                      }}
-                      className='h-full'
-                    ><FaPenToSquare className=" text-blue-600 hover:text-blue-500 h-full rounded-full text-xl" />
-                    </button>
-                  </div>
-                  <div className="tooltip" data-tip="remove">
-                    <div>
-                      <label htmlFor={`modal_${task?.taskID}`} className="cursor-pointer">
-                        <FaRegTrashAlt className=" text-red-500 hover:text-red-400 h-[30px] rounded-full text-xl" />
-                      </label>
-                      {/* Put this part before </body> tag */}
-                      <input type="checkbox" id={`modal_${task?.taskID}`} className="modal-toggle" />
-                      <div className="modal" role="dialog">
-                        <div className="modal-box">
-                          <h3 className="text-lg font-bold">Are you sure ?</h3>
-                          <p className="py-4">Do you really want to delete the task!</p>
-                          <div className='flex justify-end mt-4 gap-3'>
-                            <label htmlFor={`modal_${task.taskID}`} className="cursor-pointer inline-flex justify-center w-full px-4 py-2 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm transition-all duration-300 ease-in-out transform hover:scale-105">
-                              Cancel
-                            </label>
-                            <button
-                              type="submit"
-                              className={`inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-500 rounded-md shadow-sm hover:from-bg-hover hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 sm:ml-3 sm:w-auto sm:text-sm transition-all duration-300 ease-in-out`}
-                              onClick={async () => {
-                                removeTask(task?.taskID)
-                                showAlertBtn('The task has been deleted')
-                              }}
-                            >Delete</button>
-                          </div>
-                        </div>
-                        <label className="modal-backdrop" htmlFor={`modal_${task.taskID}`}>Close</label>
-                      </div>
-                    </div>
+                        setEditID(task?.taskID)
+                      }}>Edit</button></li>
+                      <li>
+                        <label htmlFor={`modal_${task?.taskID}`} className="cursor-pointer">
+                          Delete
+                        </label>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
-            )
-          })
-        }
-      </div>
+
+              {/* Task Information Dialog */}
+              {/* The button to open modal */}
+
+
+              {/* Put this part before </body> tag */}
+              <input type="checkbox" id={`DialogInfo_${task?.taskID}`} className="modal-toggle" />
+              <div className="modal" role="dialog">
+                <div className="modal-box">
+                  <div className='flex gap-3 mb-3'>
+                    <span className='font-semibold text-base-400'>Task Name: </span>
+                    <h3 className="text-lg font-bold">{task?.taskName}</h3>
+                  </div>
+                  <div className='flex gap-3'>
+                    <span className='font-semibold text-base-400'>Task Dscrp: </span>
+                    <p className="">{task?.taskDescription}</p>
+                  </div>
+                </div>
+                <label className="modal-backdrop" htmlFor={`DialogInfo_${task?.taskID}`}>Close</label>
+              </div>
+              {/* Delete Dialog */}
+              <DeleteDialog taskID={task?.taskID} showAlertBtn={() => showAlertBtn('The task has been deleted')} />
+            </div>
+          )
+        })
+      }
     </div>
   )
 }
+

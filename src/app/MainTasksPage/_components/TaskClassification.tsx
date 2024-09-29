@@ -23,7 +23,7 @@ export default function TaskClassification({ setFilteredTasks }: TaskClassificat
   }
 
   return (
-    <div className='w-full text-center px-5 mt-10 mb-3'>
+    <div className='w-full text-center mt-10 mb-3 lg:text-center'>
       <ul className="menu menu-vertical lg:menu-horizontal flex-row rounded-box w-full md:w-2/3 justify-center bg-[#f2f2f2!important] ">
         <li><button onClick={showAllTasks} className='font-semibold text-primary'>All</button></li>
         <li><button onClick={showCompletedTask} className='font-semibold text-primary'>Completed</button></li>

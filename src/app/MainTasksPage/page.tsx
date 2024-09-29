@@ -5,10 +5,9 @@ import { useTasksStore, Task } from '@/store/TasksStore'
 // COMPONENTS
 import Navbar from './_components/Navbar'
 import Breadcrumb from './_components/Breadcrumb'
-import TasksCall from './_components/TasksCall'
 import Alert from './_components/Alert'
 import TaskClassification from './_components/TaskClassification'
-import TasksActions from './_components/TasksActions'
+import TasksCall from './_components/TasksCall'
 
 export default function MainTasksPage() {
   const { tasks } = useTasksStore();
@@ -20,9 +19,10 @@ export default function MainTasksPage() {
       <Navbar />
       <div className='container mb-20'>
         <Breadcrumb />
-        <TasksActions editID={editID} />
-        <TaskClassification setFilteredTasks={setFilteredTasks}/>
-        <TasksCall filteredTasks={filteredTasks} setEditID={setEditID} />
+        <TaskClassification setFilteredTasks={setFilteredTasks} />
+        <div className='mt-10 flex '>
+          <TasksCall editID={editID} filteredTasks={filteredTasks} setEditID={setEditID} />
+        </div>
       </div>
       <Alert />
     </div>
